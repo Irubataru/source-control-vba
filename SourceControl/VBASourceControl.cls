@@ -7,6 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+'@PredeclaredId
 ' =====================================================================================================================
 ' source-control-vba v0.1
 ' Copyright (c) 2019 Jonas R. Glesaaen (jonas@glesaaen.com)
@@ -46,6 +47,7 @@ Public Sub Export( _
        Optional ByVal ClearContents As Boolean = False, _
        Optional ByVal WriteFolderStructure As Boolean = False, _
        Optional ByVal ExportNames As Boolean = False)
+Attribute Export.VB_Description = "Export the the VBProject of a workbook to a directory chosen by a file dialogue."
 
     ' Choose which folder to store the results in
     With Application.FileDialog(msoFileDialogFolderPicker)
@@ -82,6 +84,7 @@ Public Sub ExportToFolder( _
        Optional ByVal ClearContents As Boolean = False, _
        Optional ByVal WriteFolderStructure As Boolean = False, _
        Optional ByVal ExportNames As Boolean = False)
+Attribute ExportToFolder.VB_Description = "Export the the VBProject of a workbook to a directory."
     
     With New Scripting.FileSystemObject
     
@@ -144,6 +147,7 @@ End Sub
 
 '@Description("Export workbook names to a folder.")
 Public Sub ExportNamesToFolder(ByVal Book As Workbook, ByVal Directory As String)
+Attribute ExportNamesToFolder.VB_Description = "Export workbook names to a folder."
 
     With New Scripting.FileSystemObject
     
@@ -179,6 +183,7 @@ Public Sub Import( _
        Optional ByVal Recursive As Boolean = False, _
        Optional ByVal ImportNames As Boolean = False, _
        Optional ByVal CheckNamesOnly As Boolean = False)
+Attribute Import.VB_Description = "Import a VBA project from a directory chosen by a file dialogue and add it to Workbook's projects."
     
     ' Choose which folder to import the results from
     With Application.FileDialog(msoFileDialogFolderPicker)
@@ -217,6 +222,7 @@ Public Sub ImportFromFolder( _
        Optional ByVal Recursive As Boolean = False, _
        Optional ByVal ImportNames As Boolean = False, _
        Optional ByVal CheckNamesOnly As Boolean = False)
+Attribute ImportFromFolder.VB_Description = "Import a VBA project from a directory and add it to Workbook's projects."
        
     With New Scripting.FileSystemObject
         If Not .FolderExists(Directory) Then
@@ -260,7 +266,8 @@ End Sub
 Public Sub ImportNamesFromFolder( _
         ByVal Book As Workbook, _
         ByVal Directory As String, _
-        Optional DryRun As Boolean = False)
+        Optional ByVal DryRun As Boolean = False)
+Attribute ImportNamesFromFolder.VB_Description = "Import workbook names from a folder."
 
     With New Scripting.FileSystemObject
     
@@ -297,6 +304,7 @@ Public Sub DeleteAllComponentsInFolder( _
         ByVal Folder As String, _
         Optional ByVal CreateBackup As Boolean = False, _
         Optional ByVal DeleteManuallyUpdated As Boolean = False)
+Attribute DeleteAllComponentsInFolder.VB_Description = "Delete all VBA component in a specific folder"
 
     If CreateBackup Then
         If Not Me.BackupWorkbook(Book) Then
@@ -334,6 +342,7 @@ Public Sub DeleteAllComponentsInProject( _
         ByVal Book As Workbook, _
         Optional ByVal CreateBackup As Boolean = False, _
         Optional ByVal DeleteManuallyUpdated As Boolean = False)
+Attribute DeleteAllComponentsInProject.VB_Description = "Delete all VBA components in a workbook."
 
     Me.DeleteAllComponentsInFolder _
         Book, _
@@ -343,8 +352,9 @@ Public Sub DeleteAllComponentsInProject( _
 
 End Sub
 
-'@Descritption("Create a backup of a workbook.")
+'@Description("Create a backup of a workbook.")
 Public Function BackupWorkbook(ByVal Book As Workbook) As Boolean
+Attribute BackupWorkbook.VB_Description = "Create a backup of a workbook."
 
     ' Choose filename of the backup
     With Application.FileDialog(msoFileDialogSaveAs)
@@ -388,6 +398,7 @@ End Function
 
 '@Description("Return the folder annotation for a VBA component.")
 Public Function Directory(ByVal Component As VBIDE.VBComponent) As String
+Attribute Directory.VB_Description = "Return the folder annotation for a VBA component."
 
     With New VBScript_RegExp_55.RegExp
         .Global = False
@@ -416,11 +427,13 @@ End Function
 
 '@Description("Turn debug printing on.")
 Public Sub EnableDebugPrinting()
+Attribute EnableDebugPrinting.VB_Description = "Turn debug printing on."
     this.ShouldPrintDebugInfo = True
 End Sub
 
 '@Description("Turn debug printing off.")
 Public Sub DisableDebugPrinting()
+Attribute DisableDebugPrinting.VB_Description = "Turn debug printing off."
     this.ShouldPrintDebugInfo = False
 End Sub
 
@@ -433,6 +446,7 @@ End Sub
 
 '@Description("Log message.")
 Private Sub DebugLog(ByVal Message As String)
+Attribute DebugLog.VB_Description = "Log message."
     
     If this.ShouldPrintDebugInfo Then
         Debug.Print "(VBASourceControl) " & Message
@@ -441,7 +455,8 @@ Private Sub DebugLog(ByVal Message As String)
 End Sub
 
 '@Description("Show information about the import task, some is printed to the Immediate window.")
-Private Function ShowImportInformation() As String
+Private Sub ShowImportInformation()
+Attribute ShowImportInformation.VB_Description = "Show information about the import task, some is printed to the Immediate window."
 
     Dim RunInformation As String
     RunInformation = "Project imported successfully"
@@ -474,13 +489,14 @@ Private Function ShowImportInformation() As String
     
     MsgBox RunInformation, Buttons:=vbInformation, Title:="VBASourceControl"
 
-End Function
+End Sub
 
 ' VBA project utilities
 ' ---------------------------------------------------------------------------------------------------------------------
 
 '@Description("Export a VBA component to a file.")
 Private Sub ExportComponent(ByVal Component As VBIDE.VBComponent, ByVal Path As String)
+Attribute ExportComponent.VB_Description = "Export a VBA component to a file."
 
     Select Case Component.Type
     
@@ -504,6 +520,7 @@ End Sub
 
 '@Description("Import a VBA component from a file.")
 Private Sub ImportComponent(ByVal Book As Workbook, ByVal Path As String)
+Attribute ImportComponent.VB_Description = "Import a VBA component from a file."
 
     Dim Filename As String
     With New Scripting.FileSystemObject
@@ -529,6 +546,7 @@ End Sub
 
 '@Description("Imports document code from a file and stores it in a worksheet.")
 Private Sub ImportDocument(ByVal Book As Workbook, ByVal Path As String)
+Attribute ImportDocument.VB_Description = "Imports document code from a file and stores it in a worksheet."
 
     With New Scripting.FileSystemObject
         Dim Filename As String
@@ -565,6 +583,7 @@ End Sub
 
 '@Description("Checks whether the component code has a ManualUpdate annotation.")
 Private Function IsManuallyUpdatedComponent(ByVal Component As VBIDE.VBComponent) As Boolean
+Attribute IsManuallyUpdatedComponent.VB_Description = "Checks whether the component code has a ManualUpdate annotation."
 
     With Component.CodeModule
         IsManuallyUpdatedComponent = HasManualUpdateAnnotation(.Lines(1, .CountOfLines))
@@ -574,6 +593,7 @@ End Function
 
 '@Description("Checks whether the code in the file has a ManualUpdate annotation.")
 Private Function IsManuallyUpdatedSourceFile(ByVal Path As String) As Boolean
+Attribute IsManuallyUpdatedSourceFile.VB_Description = "Checks whether the code in the file has a ManualUpdate annotation."
 
     With New Scripting.FileSystemObject
         With .OpenTextFile(Path, IOMode:=ForReading)
@@ -585,6 +605,7 @@ End Function
 
 '@Description("Checks whether the source code contains a ManualUpdate annotation.")
 Private Function HasManualUpdateAnnotation(ByVal SourceCode As String) As Boolean
+Attribute HasManualUpdateAnnotation.VB_Description = "Checks whether the source code contains a ManualUpdate annotation."
 
     With New VBScript_RegExp_55.RegExp
         .Global = False
@@ -597,6 +618,7 @@ End Function
 
 '@Description("Searches fora component by name in a VBA project, returns nothing if none exists.")
 Private Function ComponentByName(ByVal Project As VBIDE.VBProject, ByVal Name As String) As VBIDE.VBComponent
+Attribute ComponentByName.VB_Description = "Searches fora component by name in a VBA project, returns nothing if none exists."
 
     ' Remove possible file extension
     If VBA.InStr(Name, ".") > 0 Then
@@ -615,6 +637,7 @@ End Function
 
 '@Description("Checks the extension of a file to see if it is a VBA component.")
 Private Function IsVBAComponentFiletype(ByVal Filename As String) As Boolean
+Attribute IsVBAComponentFiletype.VB_Description = "Checks the extension of a file to see if it is a VBA component."
 
     Dim FileExtension As String
     If VBA.InStr(Filename, ".") > 0 Then
@@ -632,6 +655,7 @@ End Function
 
 '@Description("Parses the type of VBA component a file is based on its file extension.")
 Private Function ComponentTypeFromFilename(ByVal Filename As String) As VBIDE.vbext_ComponentType
+Attribute ComponentTypeFromFilename.VB_Description = "Parses the type of VBA component a file is based on its file extension."
 
     Dim FileExtension As String
     If VBA.InStr(Filename, ".") >= 1 Then
@@ -654,6 +678,7 @@ End Function
 
 '@Description("Import workbook names from a string, inform about differences.")
 Private Sub ImportWorkbookName(ByVal Book As Workbook, ByVal Line As String, Optional ByVal DryRun As Boolean = False)
+Attribute ImportWorkbookName.VB_Description = "Import workbook names from a string, inform about differences."
 
     If VBA.InStr(Line, ",") < 1 Then Exit Sub
 
@@ -681,6 +706,7 @@ End Sub
 
 '@Description("Create a cache of the names in a workbook.")
 Private Sub CacheWorkbookNames(ByVal Book As Workbook)
+Attribute CacheWorkbookNames.VB_Description = "Create a cache of the names in a workbook."
 
     Set this.NameCache = New Dictionary
     
@@ -696,6 +722,7 @@ End Sub
 
 '@Description("Create subfolders for a component if they do not already exist.")
 Private Function CreateComponentDirectory(ByVal Component As VBIDE.VBComponent, ByVal BasePath As String) As String
+Attribute CreateComponentDirectory.VB_Description = "Create subfolders for a component if they do not already exist."
 
     Dim ComponentDirectory As String
     ComponentDirectory = Me.Directory(Component) & "." ' Final "." is a sentinel for the loop
@@ -737,6 +764,7 @@ End Function
 
 '@Description("Delete everything in Directory except files and folders starting in '.' (dotfiles).")
 Private Sub ClearContentsIn(ByVal Directory As String)
+Attribute ClearContentsIn.VB_Description = "Delete everything in Directory except files and folders starting in '.' (dotfiles)."
 
     With New Scripting.FileSystemObject
     
@@ -766,6 +794,7 @@ Private Sub ImportAllComponentsInFolder( _
         ByVal Book As Workbook, _
         ByVal Directory As String, _
         Optional ByVal Recursive As Boolean = False)
+Attribute ImportAllComponentsInFolder.VB_Description = "Import all VBA components in the folder to a VBProject."
         
     With New Scripting.FileSystemObject
     
@@ -796,6 +825,7 @@ End Sub
 
 '@Description("Class constructor, disabled for everything except the default instance.")
 Private Sub Class_Initialize()
+Attribute Class_Initialize.VB_Description = "Class constructor, disabled for everything except the default instance."
 
     If Not Me Is VBASourceControl Then
         Err.Raise ErrorCode, _
@@ -809,5 +839,6 @@ End Sub
 
 '@Description("Class destructor.")
 Private Sub Class_Terminate()
+Attribute Class_Terminate.VB_Description = "Class destructor."
     Set this.NewDocuments = Nothing
 End Sub

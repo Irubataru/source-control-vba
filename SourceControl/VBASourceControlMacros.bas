@@ -26,6 +26,7 @@ Private Const DebugPrinting As Boolean = True
 
 '@Description("Export the project in this workbook.")
 Public Sub ExportSourceCode()
+Attribute ExportSourceCode.VB_Description = "Export the project in this workbook."
 
     If Not DebugPrinting Then
         VBASourceControl.DisableDebugPrinting
@@ -41,6 +42,7 @@ End Sub
 
 '@Description("Import a project to this workbook.")
 Public Sub ImportSourceCode()
+Attribute ImportSourceCode.VB_Description = "Import a project to this workbook."
 
     If Not DebugPrinting Then
         VBASourceControl.DisableDebugPrinting
