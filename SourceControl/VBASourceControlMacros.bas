@@ -1,7 +1,7 @@
 Attribute VB_Name = "VBASourceControlMacros"
 ' =====================================================================================================================
 ' source-control-vba v0.1
-' Copyright (c) 2019 Jonas R. Glesaaen (jonas@glesaaen.com)
+' Copyright (c) 2020 Jonas R. Glesaaen (jonas@glesaaen.com)
 '
 ' Helper macros to run the functions in VBASourceControl.
 '
