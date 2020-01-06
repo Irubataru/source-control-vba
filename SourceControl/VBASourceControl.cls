@@ -762,27 +762,36 @@ Attribute CreateComponentDirectory.VB_Description = "Create subfolders for a com
 
 End Function
 
-'@Description("Delete everything in Directory except files and folders starting in '.' (dotfiles).")
+'@Description("Delete everything in Directory related to a VBA project excluding dot files and folders.")
 Private Sub ClearContentsIn(ByVal Directory As String)
-Attribute ClearContentsIn.VB_Description = "Delete everything in Directory except files and folders starting in '.' (dotfiles)."
+Attribute ClearContentsIn.VB_Description = "Delete everything in Directory related to a VBA project excluding dot files and folders."
 
     With New Scripting.FileSystemObject
     
         Dim File As Scripting.File
         For Each File In .GetFolder(Directory).Files
+        
             ' Ignore dotfiles, and files that are not VBA components
-            If (Not VBA.Left$(File.Name, 1) = ".") And IsVBAComponentFiletype(File.Name) Then
+            If (Not VBA.Left$(File.Name, 1) = ".") And (IsVBAComponentFiletype(File.Name) Or File.Name = NamesFilename) Then
                 DebugLog "Deleting " & File.Name
                 .DeleteFile File.Path
             End If
+            
         Next File
     
         Dim Folder As Scripting.Folder
         For Each Folder In .GetFolder(Directory).SubFolders
+
             If Not VBA.Left$(Folder.Name, 1) = "." Then
-                DebugLog "Deleting " & Folder.Name
-                .DeleteFolder Folder.Path
+                ClearContentsIn Folder.Path
+                
+                ' Only delete a folder if it is empty
+                If Folder.Files.Count + Folder.SubFolders.Count = 0 Then
+                    DebugLog "Deleting " & Folder.Name
+                    .DeleteFolder Folder.Path
+                End If
             End If
+            
         Next Folder
     
     End With
