@@ -111,6 +111,12 @@ Attribute ExportToFolder.VB_Description = "Export the the VBProject of a workboo
                 
                 Case VBIDE.vbext_ComponentType.vbext_ct_Document
                     ModuleName = Component.Name & ".doccls"
+                    
+                Case VBIDE.vbext_ComponentType.vbext_ct_MSForm
+                    ModuleName = Component.Name & ".frm"
+                    
+                Case VBIDE.vbext_ComponentType.vbext_ct_ActiveXDesigner
+                    Debug.Assert False
                 
                 Case Else
                     'TODO Treat remaining components
@@ -501,7 +507,8 @@ Attribute ExportComponent.VB_Description = "Export a VBA component to a file."
     Select Case Component.Type
     
         Case VBIDE.vbext_ComponentType.vbext_ct_ClassModule, _
-             VBIDE.vbext_ComponentType.vbext_ct_StdModule
+             VBIDE.vbext_ComponentType.vbext_ct_StdModule, _
+             VBIDE.vbext_ComponentType.vbext_ct_MSForm
             Component.Export Path
             
         Case VBIDE.vbext_ct_Document
@@ -533,7 +540,8 @@ Attribute ImportComponent.VB_Description = "Import a VBA component from a file."
     Select Case ComponentTypeFromFilename(Filename)
     
         Case VBIDE.vbext_ComponentType.vbext_ct_ClassModule, _
-             VBIDE.vbext_ComponentType.vbext_ct_StdModule
+             VBIDE.vbext_ComponentType.vbext_ct_StdModule, _
+             VBIDE.vbext_ComponentType.vbext_ct_MSForm
             Book.VBProject.VBComponents.Import Path
             
         Case VBIDE.vbext_ct_Document
@@ -638,14 +646,9 @@ End Function
 '@Description("Checks the extension of a file to see if it is a VBA component.")
 Private Function IsVBAComponentFiletype(ByVal Filename As String) As Boolean
 Attribute IsVBAComponentFiletype.VB_Description = "Checks the extension of a file to see if it is a VBA component."
-
-    Dim FileExtension As String
-    If VBA.InStr(Filename, ".") > 0 Then
-        FileExtension = VBA.Right$(Filename, VBA.Len(Filename) - VBA.InStrRev(Filename, "."))
-    End If
     
-    Select Case FileExtension
-        Case "bas", "cls", "doccls"
+    Select Case GetFileExtension(Filename)
+        Case "bas", "cls", "doccls", "frm", "frx"
             IsVBAComponentFiletype = True
         Case Else
             IsVBAComponentFiletype = False
@@ -669,7 +672,19 @@ Attribute ComponentTypeFromFilename.VB_Description = "Parses the type of VBA com
             ComponentTypeFromFilename = VBIDE.vbext_ComponentType.vbext_ct_ClassModule
         Case "doccls"
             ComponentTypeFromFilename = VBIDE.vbext_ComponentType.vbext_ct_Document
+        Case "frm"
+            ComponentTypeFromFilename = VBIDE.vbext_ComponentType.vbext_ct_MSForm
     End Select
+
+End Function
+
+'@Description("File extension from a filename.")
+Private Function GetFileExtension(ByVal Filename As String) As String
+Attribute GetFileExtension.VB_Description = "File extension from a filename."
+
+    With New Scripting.FileSystemObject
+        GetFileExtension = .GetExtensionName(Filename)
+    End With
 
 End Function
 
