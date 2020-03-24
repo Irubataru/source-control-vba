@@ -406,6 +406,8 @@ End Function
 Public Function Directory(ByVal Component As VBIDE.VBComponent) As String
 Attribute Directory.VB_Description = "Return the folder annotation for a VBA component."
 
+    If Component.CodeModule.CountOfLines = 0 Then Exit Function
+
     With New VBScript_RegExp_55.RegExp
         .Global = False
         .MultiLine = True
@@ -592,8 +594,9 @@ End Sub
 '@Description("Checks whether the component code has a ManualUpdate annotation.")
 Private Function IsManuallyUpdatedComponent(ByVal Component As VBIDE.VBComponent) As Boolean
 Attribute IsManuallyUpdatedComponent.VB_Description = "Checks whether the component code has a ManualUpdate annotation."
-
+    
     With Component.CodeModule
+        If .CountOfLines = 0 Then Exit Function
         IsManuallyUpdatedComponent = HasManualUpdateAnnotation(.Lines(1, .CountOfLines))
     End With
 
