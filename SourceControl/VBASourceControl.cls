@@ -24,6 +24,7 @@ Option Explicit
 
 Private Const ErrorCode As Long = 40725
 Private Const NamesFilename As String = "names.csv"
+Private Const QueriesFolderName As String = "queries"
 
 Private Type MVBASourceControl
     ShouldPrintDebugInfo As Boolean
@@ -46,7 +47,8 @@ Public Sub Export( _
        ByVal Book As Workbook, _
        Optional ByVal ClearContents As Boolean = False, _
        Optional ByVal WriteFolderStructure As Boolean = False, _
-       Optional ByVal ExportNames As Boolean = False)
+       Optional ByVal ExportNames As Boolean = False, _
+       Optional ByVal ExportQueries As Boolean = False)
 Attribute Export.VB_Description = "Export the the VBProject of a workbook to a directory chosen by a file dialogue."
 
     ' Choose which folder to store the results in
@@ -73,7 +75,8 @@ Attribute Export.VB_Description = "Export the the VBProject of a workbook to a d
         Directory, _
         ClearContents:=ClearContents, _
         WriteFolderStructure:=WriteFolderStructure, _
-        ExportNames:=ExportNames
+        ExportNames:=ExportNames, _
+        ExportQueries:=ExportQueries
 
 End Sub
 
@@ -83,7 +86,8 @@ Public Sub ExportToFolder( _
        ByVal Directory As String, _
        Optional ByVal ClearContents As Boolean = False, _
        Optional ByVal WriteFolderStructure As Boolean = False, _
-       Optional ByVal ExportNames As Boolean = False)
+       Optional ByVal ExportNames As Boolean = False, _
+       Optional ByVal ExportQueries As Boolean = False)
 Attribute ExportToFolder.VB_Description = "Export the the VBProject of a workbook to a directory."
     
     With New Scripting.FileSystemObject
@@ -146,6 +150,10 @@ Attribute ExportToFolder.VB_Description = "Export the the VBProject of a workboo
     If ExportNames Then
         ExportNamesToFolder Book, Directory
     End If
+    
+    If ExportQueries Then
+        ExportQueriesToFolder Book, Directory
+    End If
 
     MsgBox "Project exported successfully", Buttons:=vbInformation, Title:="VBASourceControl"
        
@@ -174,6 +182,60 @@ Attribute ExportNamesToFolder.VB_Description = "Export workbook names to a folde
             Next Name
         
         End With
+    
+    End With
+
+End Sub
+
+'@Description("Export workbook queries to a folder.")
+Public Sub ExportQueriesToFolder(ByVal Book As Workbook, ByVal Directory As String)
+Attribute ExportQueriesToFolder.VB_Description = "Export workbook queries to a folder."
+
+    With New Scripting.FileSystemObject
+    
+        If Not .FolderExists(Directory) Then
+            Err.Raise ErrorCode, _
+                Source:="VBASourceControl.ExportToFile", _
+                Description:="Export directory does not exist."
+        End If
+        
+        Dim QueriesDirectory As String
+        QueriesDirectory = .BuildPath(Directory, QueriesFolderName)
+        
+        ' First clear out the old folder if it exists
+        If .FolderExists(QueriesDirectory) Then
+    
+            Dim Folder As Scripting.Folder
+            Set Folder = .GetFolder(QueriesDirectory)
+    
+            Dim File As Scripting.File
+            For Each File In Folder.Files
+                If GetFileExtension(File.Path) = "query" Then
+                    DebugLog "Deleting " & File.Name
+                    .DeleteFile File.Path
+                End If
+            Next File
+            
+            If Folder.Files.Count + Folder.SubFolders.Count = 0 Then
+                .DeleteFolder Folder.Path
+            End If
+            
+        End If
+    
+        If Book.Queries.Count < 1 Then Exit Sub
+        
+        ' The export the queries
+        If Not .FolderExists(QueriesDirectory) Then
+            .CreateFolder QueriesDirectory
+        End If
+        
+        Dim i As Long
+        For i = 1 To Book.Queries.Count
+            With .CreateTextFile(.BuildPath(QueriesDirectory, Book.Queries(i).Name & ".query"))
+                DebugLog "Exporting " & Book.Queries(i).Name & ".query"
+                .WriteLine Book.Queries(i).Formula
+            End With
+        Next i
     
     End With
 

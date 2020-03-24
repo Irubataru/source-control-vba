@@ -22,6 +22,8 @@ Private Const UseSubfolders As Boolean = True
 Private Const ExportImportNames As Boolean = True
 Private Const CheckNamesOnly As Boolean = False
 
+Private Const ExportQueries As Boolean = False
+
 Private Const DebugPrinting As Boolean = True
 
 '@Description("Export the project in this workbook.")
@@ -36,7 +38,8 @@ Attribute ExportSourceCode.VB_Description = "Export the project in this workbook
         ThisWorkbook, _
         ClearContents:=ClearFolderBeforeExport, _
         WriteFolderStructure:=UseSubfolders, _
-        ExportNames:=ExportImportNames
+        ExportNames:=ExportImportNames, _
+        ExportQueries:=ExportQueries
     
 End Sub
 
