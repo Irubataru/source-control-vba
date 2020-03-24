@@ -10,7 +10,7 @@ Attribute VB_Exposed = False
 '@PredeclaredId
 ' =====================================================================================================================
 ' source-control-vba v0.1
-' Copyright (c) 2020 Jonas R. Glesaaen (jonas@glesaaen.com)
+' Copyright (c) 2019-2020 Jonas R. Glesaaen (jonas@glesaaen.com)
 '
 ' Utility functions for doing source control in VBA.
 '

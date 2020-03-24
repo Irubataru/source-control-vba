@@ -58,6 +58,7 @@ The class has a couple of constants which can be configured
  * `ErrorCode` Which error code VBA errors are reported as (default: `40725`)
  * `NamesFilename` The filename the workbook names are stored in (default:
    `names.csv`)
+ * `QueriesFolderName` The folder to store the queries in (default: `queries`)
 
 ---
 
@@ -68,7 +69,8 @@ Public Sub Export( _
        ByVal Book As Workbook, _
        Optional ByVal ClearContents As Boolean = False, _
        Optional ByVal WriteFolderStructure As Boolean = False, _
-       Optional ByVal ExportNames As Boolean = False)
+       Optional ByVal ExportNames As Boolean = False, _
+       Optional ByVal ExportQueries As Boolean = False)
 ```
 
 Exports the VBA project stored in `Book`. The method will bring up a file
@@ -86,7 +88,8 @@ Public Sub ExportToFolder( _
        ByVal Directory As String, _
        Optional ByVal ClearContents As Boolean = False, _
        Optional ByVal WriteFolderStructure As Boolean = False, _
-       Optional ByVal ExportNames As Boolean = False)
+       Optional ByVal ExportNames As Boolean = False, _
+       Optional ByVal ExportQueries As Boolean = False)
 ```
 
 Exports the VBA project stored in `Book` to a folder taken as an argument.
@@ -139,6 +142,15 @@ Whether or not to also export workbook names. See the
 documentation on the format. The directory passed to the export function is
 `[project-root]`.
 
+```vb
+Optional ByVal ExportQueries As Boolean = False
+```
+
+Whether or not to also export the workbook queries. See the
+[`ExportQueriesToFolder`](#exportqueriestofolder-function) function for
+documentation. The directory passed to the export function is
+`[project-root]/[queries-folder]`.
+
 ---
 
 ### `ExportNamesToFolder` function
@@ -171,6 +183,34 @@ ByVal Directory As String
 ```
 
 The directory to store the names file in.
+
+---
+
+### `ExportQueriesToFolder` function
+
+```vb
+Public Sub ExportQueriesToFolder( _
+        ByVal Book As Workbook, _
+        ByVal Directory As String)
+```
+
+Exports the queries in a workbook to separate files in the queries folder. The
+queries are saved as text at<br/>
+`{Directory}/[query-name].query`.
+
+#### Arguments
+
+```vb
+ByVal Book As Workbook
+```
+
+The workbook from which to export the queries.
+
+```vb
+ByVal Directory As String
+```
+
+The directory to store the queries in.
 
 ---
 
