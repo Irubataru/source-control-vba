@@ -473,7 +473,7 @@ Attribute Directory.VB_Description = "Return the folder annotation for a VBA com
     With New VBScript_RegExp_55.RegExp
         .Global = False
         .MultiLine = True
-        .Pattern = "^'@Folder\(""(.*)""\)$"
+        .Pattern = "^'@Folder[( ]""(.*)""\)?$"
     
         Dim ComponentCode As String
         ComponentCode = Component.CodeModule.Lines(1, Component.CodeModule.CountOfLines)
